@@ -19,13 +19,17 @@ The BSHR (Brainstorm, Search, Hypothesize, Refine) project is an innovative info
    ```
    pip install -r requirements.txt
    ```
+3. **Modify config/settings.py**:
+   - Add your Bing Web Search API key to `BING_API_KEY`.
+   - Add your OpenAI API key to `OPENAI_API_KEY`.
 
 ## Configuration
 Set up your API keys and configure endpoints in `config/settings.py`. Customize logging preferences in `src/utils/logger.py`.
 
 ## Usage
-Run the application:
+Set up logs dir and Run the application:
 ```
+mkdir logs
 cd src/
 python main.py
 ```
