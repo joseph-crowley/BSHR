@@ -1,3 +1,7 @@
+# Project-specific files
+config/settings.py
+logs/application.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
