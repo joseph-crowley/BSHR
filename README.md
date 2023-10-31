@@ -13,6 +13,7 @@ The BSHR (Brainstorm, Search, Hypothesize, Refine) project is an innovative info
 1. **Clone the Repository**:
    ```
    git clone https://github.com/joseph-crowley/BSHR.git
+   cd BSHR/
    ```
 2. **Install Dependencies**:
    ```
@@ -55,10 +56,14 @@ Specify the license under which the project is released.
 
 # User's Guide
 ## Getting Started
-Execute `src/main.py` and input your query when prompted.
+Execute `main.py` and input your query when prompted.
 
 ## Interaction
 Observe the console output as the system processes your query, searching the web and generating hypotheses.
+
+## Logs and Results
+
+Logs are in logs/application.log
 
 ## Receiving Answers
 The application will display the final synthesized answer after completing its analysis.
