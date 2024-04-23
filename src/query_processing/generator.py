@@ -13,7 +13,7 @@ def extract_keywords(query: str, existing_keywords: list) -> list:
     """
     system_msg = {
         "role": "system",
-        "content": f'Reply with a list of key words based on the following query:\n\n{query}\n\nCurrent keywords: {existing_keywords}\n\nGenerate new keywords that approach the query from another perspective and clearly fit the query.\n\n---\n\nExample:\nQuery: What is the history of the United States?\n["history of United States", "American revolution", "founding USA", "1776", "13 colonies"]\n\nReply only with the list of keywords, and no other text.',
+        "content": f'Reply with a list of key words based on the following query:\n\n{query}\n\nCurrent keywords: {existing_keywords}\n\nGenerate new keywords that approach the query from another perspective and clearly fit the query.\n\n---\n\nExample:\nQuery: What is the history of the United States?\n["history of United States", "American revolution", "founding USA", "1776", "13 colonies"]\n\nReply only with the python list of keywords, and no other text.',
     }
 
     usr_msg = {
@@ -26,8 +26,15 @@ def extract_keywords(query: str, existing_keywords: list) -> list:
         messages=conversation,
     ))
 
+    # encode and decode to fix any formatting issues
+    response["content"] = response["content"].encode("utf-8").decode("unicode_escape")
+
     try:
         new_keywords = ast.literal_eval(response["content"])
+        return new_keywords
+    except SyntaxError as err:
+        # GPT sometimes adds a period at the end of the list, so we'll try to fix that
+        new_keywords = ast.literal_eval(response["content"][:-1])
         return new_keywords
     except Exception as err:
         logger.error(f"Error: {err}")
@@ -42,7 +49,7 @@ def create_queries(keywords: list) -> list:
 
     system_msg = {
         "role": "system",
-        "content": f'Reply with a list of queries based on the following keywords:\n\n{keywords}\n\nGenerate queries that approach the keywords from another perspective and clearly fit the keywords.\n\n---\n\nExample:\nKeywords: ["history of United States", "American revolution", "founding USA", "1776", "13 colonies"]\n["history of United States", "American revolution", "founding USA", "1776", "13 colonies", "history of the American revolution", "history of the founding of the USA", "history of 1776", "history of the 13 colonies", "American revolution of 1776", "American revolution of the 13 colonies", "founding of the USA in 1776", "founding of the USA in the 13 colonies", "1776 American revolution", "1776 founding of the USA", "1776 13 colonies", "13 colonies American revolution", "13 colonies founding of the USA", "13 colonies 1776"]\n\nReply only with the list of queries, and no other text.',
+        "content": f'Reply with a list of queries based on the following keywords:\n\n{keywords}\n\nGenerate queries that approach the keywords from another perspective and clearly fit the keywords.\n\n---\n\nExample:\nKeywords: ["history of United States", "American revolution", "founding USA", "1776", "13 colonies"]\n["history of United States", "American revolution", "founding USA", "1776", "13 colonies", "history of the American revolution", "history of the founding of the USA", "history of 1776", "history of the 13 colonies", "American revolution of 1776", "American revolution of the 13 colonies", "founding of the USA in 1776", "founding of the USA in the 13 colonies", "1776 American revolution", "1776 founding of the USA", "1776 13 colonies", "13 colonies American revolution", "13 colonies founding of the USA", "13 colonies 1776"]\n\nReply only with the python list of queries, and no other text.',
     }
 
     usr_msg = {
@@ -55,6 +62,9 @@ def create_queries(keywords: list) -> list:
     response = json.loads(call_openai(
         messages=conversation,
     ))
+     
+    # encode and decode to fix any formatting issues
+    response["content"] = response["content"].encode("utf-8").decode("unicode_escape")
 
     try:
         new_queries = ast.literal_eval(response["content"])
@@ -75,5 +85,7 @@ def generate_search_queries(main_query: str, existing_keywords: list, all_search
     new_queries = create_queries(all_keywords)
 
     logger.info(f"New keywords: {new_keywords}")
+    logger.info(f"New queries: {new_queries}")
+
 
     return new_queries

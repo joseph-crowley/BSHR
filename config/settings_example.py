@@ -1,4 +1,5 @@
 # Bing Web Search API settings
+# Leave this string empty if you don't want to use Bing Web Search API
 BING_SEARCH_V7_SUBSCRIPTION_KEY = "YOUR_KEY_HERE"
 BING_SEARCH_V7_ENDPOINT = "https://api.bing.microsoft.com"
 
